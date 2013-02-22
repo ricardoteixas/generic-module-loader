@@ -1,0 +1,24 @@
+# Git ignore patterns
+# Author: Ricardo F. Teixeira <ricardo.teixas@gmail.com>
+
+# Ignore build output
+build/
+# bin/
+
+# Ignore Javadoc output
+doc/
+
+# Ignore any eventual Eclipse project files, these don't belong in the
+# repository.
+/.classpath
+/.project
+/.settings
+.metadata/
+
+# Ignore common editor swap files
+*.swp
+*.bak
+*~
+
+# Ignore Mac OS X metadata files
+.DS_Store
