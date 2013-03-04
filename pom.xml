@@ -1,107 +1,81 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>pt.caixamagica</groupId>
-  <artifactId>gml</artifactId>
-  <version>1</version>
-  <name>Generic Module Loader</name>
-  
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
-    <github.global.server>github</github.global.server>
-  </properties>
-  
-  
-  <organization>
-    <name>Caixa Mágica Software</name>
-    <url>http://www.caixamagica.pt</url>
-  </organization>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>pt.caixamagica</groupId>
+	<artifactId>gml</artifactId>
+	<version>1</version>
+	<name>Generic Module Loader</name>
 
-  <developers>
-    <developer>
-      <id>rfteixeira</id>
-      <name>Ricardo F. Teixeira</name>
-      <email>ricardo.teixeira@caixamagica.pt</email>
-      <organization>Caixa Mágica Software</organization>
-      <organizationUrl>http://www.caixamagica.pt</organizationUrl>
-      <roles>
-        <role>maintainer</role>
-        <role>developer</role>
-      </roles>
-    </developer>
-  </developers>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
+	</properties>
 
-  <distributionManagement>
-    <repository>
-      <id>internal.repo</id>
-      <name>Temporary Staging Repository</name>
-      <url>file://${project.build.directory}/mvn-repo</url>
-    </repository>
-  </distributionManagement>
-  
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
+	<organization>
+		<name>Caixa Mágica Software</name>
+		<url>http://www.caixamagica.pt</url>
+	</organization>
 
-    <dependency>
-      <groupId>bcel</groupId>
-      <artifactId>bcel</artifactId>
-      <version>5.1</version>
-    </dependency> 
-  </dependencies>
-  
-  <build>
-    <defaultGoal>package</defaultGoal>
-    <directory>${basedir}/build</directory>
-    
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <reportOutputDirectory>${basedir}</reportOutputDirectory>
-          <destDir>doc</destDir>
-        </configuration>
-      </plugin>
-      
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
+	<developers>
+		<developer>
+			<id>rfteixeira</id>
+			<name>Ricardo F. Teixeira</name>
+			<email>ricardo.teixeira@caixamagica.pt</email>
+			<organization>Caixa Mágica Software</organization>
+			<organizationUrl>http://www.caixamagica.pt</organizationUrl>
+			<roles>
+				<role>maintainer</role>
+				<role>developer</role>
+			</roles>
+		</developer>
+	</developers>
 
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.7</version>
-        <configuration>
-          <message>Maven artifacts for ${project.version}</message>
-          <noJekyll>true</noJekyll>
-          <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-          <branch>refs/heads/mvn-repo</branch>
-          <includes>
-            <include>**/*</include>
-          </includes>
-          <repositoryName>generic-module-loader</repositoryName> 
-          <repositoryOwner>ricardoteixas</repositoryOwner> 
-        </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>site</goal>
-              </goals>
-              <phase>deploy</phase>
-            </execution>
-            </executions>
-        </plugin>
-    </plugins>
+	<scm>
+		<url>https://github.com/ricardoteixas/generic-module-loader</url>
+		<connection>scm:git:git://github.com/ricardoteixas/generic-module-loader.git</connection>
+		<developerConnection>scm:git:git@github.com:ricardoteixas/generic-module-loader.git</developerConnection>
+	</scm>
 
-  </build>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>bcel</groupId>
+			<artifactId>bcel</artifactId>
+			<version>5.1</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<defaultGoal>package</defaultGoal>
+		<directory>${basedir}/build</directory>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<reportOutputDirectory>${basedir}</reportOutputDirectory>
+					<destDir>doc</destDir>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.0</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
 </project>
