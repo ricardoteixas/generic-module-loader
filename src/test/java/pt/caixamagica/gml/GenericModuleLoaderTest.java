@@ -6,7 +6,7 @@
  * 
  */
 
-package pt.caixamagica.genericmoduleloader;
+package pt.caixamagica.gml;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,8 +19,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import pt.caixamagica.genericmoduleloader.GenericModuleLoader;
-import pt.caixamagica.genericmoduleloader.modules.IModule;
+import pt.caixamagica.gml.GenericModuleLoader;
+import pt.caixamagica.gml.modules.IModule;
 
 public class GenericModuleLoaderTest extends TestCase {
 	public GenericModuleLoaderTest(String name) {
@@ -29,7 +29,7 @@ public class GenericModuleLoaderTest extends TestCase {
 	
 	@Test
 	public void testLoadModulesWhoImplementIModuleInterface() {
-		String path = "build/test-classes/pt/caixamagica/genericmoduleloader/modules";
+		String path = "build/test-classes/pt/caixamagica/gml/modules";
 		GenericModuleLoader loader = new GenericModuleLoader();
 		
 		try {
@@ -46,7 +46,7 @@ public class GenericModuleLoaderTest extends TestCase {
 
 	@Test
 	public void testLoadAllModules() {
-		String path = "build/test-classes/pt/caixamagica/genericmoduleloader/modules";
+		String path = "build/test-classes/pt/caixamagica/gml/modules";
 		GenericModuleLoader loader = new GenericModuleLoader();
 		
 		try {
@@ -98,7 +98,7 @@ public class GenericModuleLoaderTest extends TestCase {
 	
 	@Test
 	public void testUnloadModule1() {
-		String path = "build/test-classes/pt/caixamagica/genericmoduleloader/modules";
+		String path = "build/test-classes/pt/caixamagica/gml/modules";
 		GenericModuleLoader loader = new GenericModuleLoader();
 		
 		try {

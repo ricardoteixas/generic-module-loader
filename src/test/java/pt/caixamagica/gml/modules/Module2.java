@@ -1,4 +1,4 @@
-package pt.caixamagica.genericmoduleloader.modules;
+package pt.caixamagica.gml.modules;
 
 public class Module2 {
 	public void print() {

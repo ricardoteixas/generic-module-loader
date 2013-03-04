@@ -6,7 +6,7 @@
  * 
  */
 
-package pt.caixamagica.genericmoduleloader;
+package pt.caixamagica.gml;
 
 import java.io.DataInputStream;
 import java.io.File;
