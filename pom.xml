@@ -89,6 +89,8 @@
           <includes>
             <include>**/*</include>
           </includes>
+          <repositoryName>generic-module-loader</repositoryName> 
+          <repositoryOwner>ricardoteixas</repositoryOwner> 
         </configuration>
           <executions>
             <execution>
