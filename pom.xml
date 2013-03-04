@@ -8,6 +8,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.build.timestamp.format>yyyy-MM-dd</maven.build.timestamp.format>
+    <github.global.server>github</github.global.server>
   </properties>
   
   
@@ -29,24 +30,32 @@
       </roles>
     </developer>
   </developers>
+
+  <distributionManagement>
+    <repository>
+      <id>internal.repo</id>
+      <name>Temporary Staging Repository</name>
+      <url>file://${project.build.directory}/mvn-repo</url>
+    </repository>
+  </distributionManagement>
   
   <dependencies>
-  	<dependency>
-  		<groupId>junit</groupId>
-  		<artifactId>junit</artifactId>
-  		<version>4.11</version>
-  		<scope>test</scope>
-  	</dependency>
-  	
-  	<dependency>
-	  <groupId>bcel</groupId>
-	  <artifactId>bcel</artifactId>
-	  <version>5.1</version>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>bcel</groupId>
+      <artifactId>bcel</artifactId>
+      <version>5.1</version>
     </dependency> 
   </dependencies>
   
   <build>
-  	<defaultGoal>package</defaultGoal>
+    <defaultGoal>package</defaultGoal>
     <directory>${basedir}/build</directory>
     
     <plugins>
@@ -66,7 +75,30 @@
           <source>1.7</source>
           <target>1.7</target>
         </configuration>
-      </plugin>  
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.7</version>
+        <configuration>
+          <message>Maven artifacts for ${project.version}</message>
+          <noJekyll>true</noJekyll>
+          <outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+          <branch>refs/heads/mvn-repo</branch>
+          <includes>
+            <include>**/*</include>
+          </includes>
+        </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>site</goal>
+              </goals>
+              <phase>deploy</phase>
+            </execution>
+            </executions>
+        </plugin>
     </plugins>
 
   </build>
