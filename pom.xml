@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pt.caixamagica</groupId>
 	<artifactId>gml</artifactId>
-	<version>1</version>
+	<version>1.0.0</version>
 	<name>Generic Module Loader</name>
 
 	<properties>
@@ -35,6 +35,19 @@
 		<connection>scm:git:git://github.com/ricardoteixas/generic-module-loader.git</connection>
 		<developerConnection>scm:git:git@github.com:ricardoteixas/generic-module-loader.git</developerConnection>
 	</scm>
+
+	<distributionManagement>
+		<repository>
+			<id>release-repo</id>
+			<name>Release Repository</name>
+			<url>https://github.com/ricardoteixas/mvn-repo/raw/master/releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshot-repo</id>
+			<name>Snapshot Repository</name>
+			<url>https://github.com/ricardoteixas/mvn-repo/raw/master/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<dependencies>
 		<dependency>
