@@ -94,11 +94,11 @@ public final class GenericModuleLoader<E> {
 		factory = new GenericModuleFactory<E>();
 	}
 
-	public int size() {
+	public synchronized int size() {
 		return this.factory.modules.size();
 	}
 
-	public boolean isEmpty() {
+	public synchronized boolean isEmpty() {
 		return this.factory.modules.isEmpty();
 	}
 
@@ -154,8 +154,7 @@ public final class GenericModuleLoader<E> {
 		return load(path, null);
 	}
 
-	public synchronized List<E> load(File path, Class<E> type) throws IOException, ClassNotFoundException, InstantiationException,
-			IllegalAccessException {
+	public synchronized List<E> load(File path, Class<E> type) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
 		if (path == null) {
 			throw new IllegalArgumentException();
 		}
