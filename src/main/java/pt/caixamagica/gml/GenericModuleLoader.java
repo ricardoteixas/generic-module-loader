@@ -25,58 +25,60 @@ import org.apache.bcel.Repository;
 import org.apache.bcel.classfile.ClassParser;
 import org.apache.bcel.classfile.JavaClass;
 
-public final class GenericModuleLoader {
-	private static final class GenericModuleFactory {
-		private final ConcurrentMap<String, WeakReference<Object>> modules;
-		
-		public GenericModuleFactory() { 
-			modules = new ConcurrentHashMap<String, WeakReference<Object>>();
+public final class GenericModuleLoader<E> {
+	private static final class GenericModuleFactory<E> {
+		private final ConcurrentMap<String, WeakReference<E>> modules;
+
+		public GenericModuleFactory() {
+			modules = new ConcurrentHashMap<String, WeakReference<E>>();
 		}
-		
-		public Object instantiate(String name, Class<?> type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+
+		public E instantiate(String name, Class<E> type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
 			JavaClass module = new ClassParser(name).parse();
 
 			if (this.modules.containsKey(module.getClassName())) {
-				return this.modules.get(module.getClassName());
+				return this.modules.get(module.getClassName()).get();
 			}
-			
+
 			JavaClass moduleInterface = Repository.lookupClass(type);
-			
+
 			for (JavaClass m : module.getInterfaces()) {
 				if (m.implementationOf(moduleInterface)) {
 					Class<?> obj = Class.forName(module.getClassName());
-					
+
 					if (obj != null) {
 						for (Constructor<?> c : obj.getConstructors()) {
 							if (c.getParameterTypes().length == 0) {
-								WeakReference<Object> reference = new WeakReference<Object>(obj.newInstance());
+								@SuppressWarnings("unchecked")
+								WeakReference<E> reference = new WeakReference<E>((E) obj.newInstance());
 								this.modules.put(module.getClassName(), reference);
-								
+
 								return reference.get();
 							}
 						}
 					}
 				}
 			}
-			
+
 			return null;
 		}
-		
-		public Object instantiate(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+
+		public E instantiate(String name) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
 			JavaClass module = new ClassParser(name).parse();
 
 			if (this.modules.containsKey(module.getClassName())) {
-				return this.modules.get(module.getClassName());
+				return this.modules.get(module.getClassName()).get();
 			}
-			
+
 			Class<?> obj = Class.forName(module.getClassName());
-			
+
 			if (obj != null) {
 				for (Constructor<?> c : obj.getConstructors()) {
 					if (c.getParameterTypes().length == 0) {
-						WeakReference<Object> reference = new WeakReference<Object>(obj.newInstance());
+						@SuppressWarnings("unchecked")
+						WeakReference<E> reference = new WeakReference<E>((E) obj.newInstance());
 						this.modules.put(module.getClassName(), reference);
-						
+
 						return reference.get();
 					}
 				}
@@ -85,79 +87,80 @@ public final class GenericModuleLoader {
 			return null;
 		}
 	}
-	
-	private final GenericModuleFactory factory;
-	
+
+	private final GenericModuleFactory<E> factory;
+
 	public GenericModuleLoader() {
-		factory = new GenericModuleFactory();
+		factory = new GenericModuleFactory<E>();
 	}
-	
+
 	public int size() {
 		return this.factory.modules.size();
 	}
-	
+
 	public boolean isEmpty() {
 		return this.factory.modules.isEmpty();
 	}
-	
-	public synchronized boolean unload(Object module) {
+
+	public synchronized boolean unload(E module) {
 		if (module == null) {
 			return false;
 		}
 
-		for (WeakReference<Object> m : this.factory.modules.values()) {
+		for (WeakReference<E> m : this.factory.modules.values()) {
 			if (m.get().equals(module)) {
-				Object remove = this.factory.modules.remove(m.get().getClass().getName());
-				
+				WeakReference<E> remove = this.factory.modules.remove(m.get().getClass().getName());
+
 				System.gc();
-				
-				return (remove != null);
+
+				return (remove.get() != null);
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	public synchronized boolean unload() {
-		for (WeakReference<Object> m : this.factory.modules.values()) {
+		for (WeakReference<E> m : this.factory.modules.values()) {
 			this.factory.modules.remove(m.get().getClass().getName());
 		}
-		
+
 		System.gc();
-		
+
 		return this.factory.modules.isEmpty();
 	}
 
-	public synchronized List<Object> load(String path) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+	public synchronized List<E> load(String path) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
 		if (path == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		return load(new File(path), null);
 	}
-	
-	public synchronized List<Object> load(String path, Class<?> type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+
+	public synchronized List<E> load(String path, Class<E> type) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
 		if (path == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		return load(new File(path), type);
 	}
-	
-	public synchronized List<Object> load(File path) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+
+	public synchronized List<E> load(File path) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
 		if (path == null) {
 			throw new IllegalArgumentException();
 		}
-		
+
 		return load(path, null);
 	}
 
-	public synchronized List<Object> load(File path, Class<?> type) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+	public synchronized List<E> load(File path, Class<E> type) throws IOException, ClassNotFoundException, InstantiationException,
+			IllegalAccessException {
 		if (path == null) {
 			throw new IllegalArgumentException();
 		}
-		
-		if (! path.exists() || path.isFile()) {
+
+		if (!path.exists() || path.isFile()) {
 			throw new FileNotFoundException();
 		}
 
@@ -167,26 +170,25 @@ public final class GenericModuleLoader {
 			}
 		});
 
-
-		List<Object> list = new LinkedList<Object>();
+		List<E> list = new LinkedList<E>();
 
 		for (int i = 0; i < plugins.length; i++) {
 			String plugin = plugins[i].substring(0, plugins[i].length() - 6);
 
 			if (plugin.indexOf('$') == -1) {
 				String filename = path + File.separator + plugins[i];
-				
+
 				try (DataInputStream input = new DataInputStream(new FileInputStream(filename));) {
-					Object module;
-					
+					E module;
+
 					if (type == null) {
 						module = this.factory.instantiate(filename);
 					}
-					
+
 					else {
 						module = this.factory.instantiate(filename, type);
 					}
-					
+
 					if (module != null) {
 						list.add(module);
 					}

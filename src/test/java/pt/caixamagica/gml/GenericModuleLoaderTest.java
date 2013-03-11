@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import pt.caixamagica.gml.GenericModuleLoader;
 import pt.caixamagica.gml.modules.IModule;
+import pt.caixamagica.gml.modules.ISomething;
 
 public class GenericModuleLoaderTest extends TestCase {
 	public GenericModuleLoaderTest(String name) {
@@ -30,13 +31,30 @@ public class GenericModuleLoaderTest extends TestCase {
 	@Test
 	public void testLoadModulesWhoImplementIModuleInterface() {
 		String path = "build/test-classes/pt/caixamagica/gml/modules";
-		GenericModuleLoader loader = new GenericModuleLoader();
+		GenericModuleLoader<IModule> loader = new GenericModuleLoader<IModule>();
 		
 		try {
-			List<Object> modules = loader.load(path, IModule.class);
+			List<IModule> modules = loader.load(path, IModule.class);
 
 			assertTrue(modules.size() == 1);
 			assertTrue(modules.get(0) instanceof IModule);
+		}
+
+		catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testLoadModulesWhoImplementIModuleInterfaceButCompareWithISomethingInterface() {
+		String path = "build/test-classes/pt/caixamagica/gml/modules";
+		GenericModuleLoader<IModule> loader = new GenericModuleLoader<IModule>();
+		
+		try {
+			List<IModule> modules = loader.load(path, IModule.class);
+
+			assertTrue(modules.size() == 1);
+			assertFalse(modules.get(0) instanceof ISomething);
 		}
 
 		catch (InstantiationException | IllegalAccessException | ClassNotFoundException | IOException e) {
@@ -47,7 +65,7 @@ public class GenericModuleLoaderTest extends TestCase {
 	@Test
 	public void testLoadAllModules() {
 		String path = "build/test-classes/pt/caixamagica/gml/modules";
-		GenericModuleLoader loader = new GenericModuleLoader();
+		GenericModuleLoader<Object> loader = new GenericModuleLoader<Object>();
 		
 		try {
 			List<Object> modules = loader.load(path);
@@ -63,7 +81,7 @@ public class GenericModuleLoaderTest extends TestCase {
 	@Test
 	public void testExpectingFileNotLoadedException() throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
 		String path = UUID.randomUUID().toString();
-		GenericModuleLoader loader = new GenericModuleLoader();
+		GenericModuleLoader<Object> loader = new GenericModuleLoader<Object>();
 		
 		try {
 			List<Object> modules = loader.load(path);
@@ -79,7 +97,7 @@ public class GenericModuleLoaderTest extends TestCase {
 	
 	@Test
 	public void testExpectingEmptyList() {
-		GenericModuleLoader loader = new GenericModuleLoader();
+		GenericModuleLoader<Object> loader = new GenericModuleLoader<Object>();
 		
 		try {
 			Path path = Files.createTempDirectory(UUID.randomUUID().toString());
@@ -99,10 +117,10 @@ public class GenericModuleLoaderTest extends TestCase {
 	@Test
 	public void testUnloadModule1() {
 		String path = "build/test-classes/pt/caixamagica/gml/modules";
-		GenericModuleLoader loader = new GenericModuleLoader();
+		GenericModuleLoader<IModule> loader = new GenericModuleLoader<IModule>();
 		
 		try {
-			List<Object> modules = loader.load(path, IModule.class);
+			List<IModule> modules = loader.load(path, IModule.class);
 			
 			loader.unload(modules.get(0));
 			
